@@ -1,0 +1,10 @@
+{
+	"name": "imdbstorage",
+	"properties": {
+		"annotations": [],
+		"type": "AzureBlobFS",
+		"typeProperties": {
+			"url": "https://damgimdbstg.dfs.core.windows.net/"
+		}
+	}
+}
