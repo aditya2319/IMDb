@@ -1,0 +1,57 @@
+{
+	"name": "name_dataflow1",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "namebasics",
+						"type": "DatasetReference"
+					},
+					"name": "source1"
+				}
+			],
+			"sinks": [],
+			"transformations": [
+				{
+					"name": "derivedColumn1"
+				},
+				{
+					"name": "derivedColumn2"
+				},
+				{
+					"name": "flatten1"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          nconst as string,",
+				"          primaryName as string,",
+				"          birthYear as string,",
+				"          deathYear as string,",
+				"          primaryProfession as string,",
+				"          knownForTitles as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> source1",
+				"source1 derive(primaryProfession = toString(primaryProfession),",
+				"          knownForTitles = toString(knownForTitles)) ~> derivedColumn1",
+				"derivedColumn1 derive(primaryProfession = split(replace(replace(replace(primaryProfession, \"[\", \"\"), \"]\", \"\"), \"\\\"\", \"\"), \",\"),",
+				"          knownForTitles = split(replace(replace(replace(knownForTitles, \"[\", \"\"), \"]\", \"\"), \"\\\"\", \"\"), \",\")) ~> derivedColumn2",
+				"derivedColumn2 foldDown(unrollMultiple(primaryProfession,knownForTitles),",
+				"     mapColumn(",
+				"          nconst,",
+				"          primaryName,",
+				"          birthYear,",
+				"          deathYear,",
+				"          primaryProfession,",
+				"          knownForTitles",
+				"     ),",
+				"     skipDuplicateMapInputs: false,",
+				"     skipDuplicateMapOutputs: false) ~> flatten1"
+			]
+		}
+	}
+}
