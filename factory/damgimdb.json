@@ -1,0 +1,9 @@
+{
+	"name": "damgimdb",
+	"location": "eastus",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "07645313-eefa-4d4e-b930-c8108866a8e9",
+		"tenantId": "a8eec281-aaa3-4dae-ac9b-9a398b9215e7"
+	}
+}
