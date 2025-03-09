@@ -1,0 +1,18 @@
+{
+	"name": "IMDb",
+	"type": "Microsoft.DataFactory/factories/linkedservices",
+	"properties": {
+		"annotations": [],
+		"type": "SnowflakeV2",
+		"typeProperties": {
+			"authenticationType": "Basic",
+			"accountIdentifier": "EHA74160.AZURE_EASTUS2.AZURE",
+			"user": "USER1",
+			"database": "IMDB",
+			"warehouse": "IMDB_WH",
+			"role": "OWNER",
+			"host": "XXMYHET-IZA49605.snowflakecomputing.com",
+			"encryptedCredential": "ew0KICAiVmVyc2lvbiI6ICIyMDE3LTExLTMwIiwNCiAgIlByb3RlY3Rpb25Nb2RlIjogIktleSIsDQogICJTZWNyZXRDb250ZW50VHlwZSI6ICJQbGFpbnRleHQiLA0KICAiQ3JlZGVudGlhbElkIjogIkRBVEFGQUNUT1JZQDk3NTJEQTg2LTRDQzktNDBEQy05NzE0LUY0MUE4QzRCMDQ3MV8xMDI0MTVhMi02NTAyLTRlN2QtYmQ1NC0yYmFiMGYxZmM5YmQiDQp9"
+		}
+	}
+}
