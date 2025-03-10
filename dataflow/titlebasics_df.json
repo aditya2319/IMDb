@@ -15,7 +15,7 @@
 			"sinks": [
 				{
 					"dataset": {
-						"referenceName": "SnowflakeTableimdb",
+						"referenceName": "Snowflakeimdb",
 						"type": "DatasetReference"
 					},
 					"name": "sink1"
@@ -30,6 +30,9 @@
 				},
 				{
 					"name": "surrogateKey1"
+				},
+				{
+					"name": "derivedColumn2"
 				}
 			],
 			"scriptLines": [
@@ -66,19 +69,20 @@
 				"flatten1 keyGenerate(output(TitleKey as long),",
 				"     startAt: 1L,",
 				"     stepValue: 1L) ~> surrogateKey1",
-				"surrogateKey1 sink(allowSchemaDrift: true,",
+				"surrogateKey1 derive(primaryTitle = left(primaryTitle, 255),",
+				"          originalTitle = left(originalTitle, 255)) ~> derivedColumn2",
+				"derivedColumn2 sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     input(",
 				"          TITLEKEY as decimal(10,0),",
-				"          DATE_SK as string,",
 				"          TCONST as string,",
 				"          TITLETYPE as string,",
 				"          PRIMARYTITLE as string,",
 				"          ORIGINALTITLE as string,",
-				"          ISADULT as decimal(38,0),",
-				"          STARTYEAR as decimal(38,0),",
-				"          ENDYEAR as decimal(38,0),",
-				"          RUNTIMEMINUTES as decimal(38,0)",
+				"          ISADULT as string,",
+				"          STARTYEAR as string,",
+				"          ENDYEAR as string,",
+				"          RUNTIMEMINUTES as string",
 				"     ),",
 				"     deletable:false,",
 				"     insertable:true,",
