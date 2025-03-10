@@ -17,6 +17,13 @@
 						"type": "DatasetReference"
 					},
 					"name": "source2"
+				},
+				{
+					"dataset": {
+						"referenceName": "DelimitedText2",
+						"type": "DatasetReference"
+					},
+					"name": "source3"
 				}
 			],
 			"sinks": [],
@@ -26,6 +33,12 @@
 				},
 				{
 					"name": "select1"
+				},
+				{
+					"name": "join2"
+				},
+				{
+					"name": "derivedColumn1"
 				}
 			],
 			"scriptLines": [
@@ -49,24 +62,37 @@
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     ignoreNoFilesFound: false) ~> source2",
+				"source(output(",
+				"          {ISO Language Name} as string,",
+				"          Codes as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> source3",
 				"source1, source2 join(region == CountryCode,",
 				"     joinType:'left',",
 				"     matchType:'exact',",
 				"     ignoreSpaces: false,",
 				"     broadcast: 'auto')~> join1",
-				"join1 select(mapColumn(",
+				"join2 select(mapColumn(",
 				"          titleId,",
 				"          ordering,",
 				"          title,",
-				"          region,",
-				"          {Country Name},",
-				"          language,",
+				"          countryname = {Country Name},",
+				"          language = {ISO Language Name},",
 				"          types,",
 				"          attributes,",
 				"          isOriginalTitle",
 				"     ),",
 				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true) ~> select1"
+				"     skipDuplicateMapOutputs: true) ~> select1",
+				"join1, source3 join(language == Codes,",
+				"     joinType:'left',",
+				"     matchType:'exact',",
+				"     ignoreSpaces: false,",
+				"     broadcast: 'auto')~> join2",
+				"select1 derive(countryname = iif(isNull(countryname), 'unknown', countryname),",
+				"          language = iif(isNull(language), 'unknown', language)) ~> derivedColumn1"
 			]
 		}
 	}
