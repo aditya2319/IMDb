@@ -1,0 +1,32 @@
+{
+	"name": "titleprincipals_df",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "titleprincipals_ds",
+						"type": "DatasetReference"
+					},
+					"name": "titleprincipalscsv"
+				}
+			],
+			"sinks": [],
+			"transformations": [],
+			"scriptLines": [
+				"source(output(",
+				"          tconst as string,",
+				"          ordering as string,",
+				"          nconst as string,",
+				"          category as string,",
+				"          job as string,",
+				"          characters as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> titleprincipalscsv"
+			]
+		}
+	}
+}
