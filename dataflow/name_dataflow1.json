@@ -6,13 +6,17 @@
 			"sources": [
 				{
 					"dataset": {
-						"referenceName": "namebasics",
+						"referenceName": "Parquet1",
 						"type": "DatasetReference"
 					},
 					"name": "source1"
 				}
 			],
-			"sinks": [],
+			"sinks": [
+				{
+					"name": "sink2"
+				}
+			],
 			"transformations": [
 				{
 					"name": "derivedColumn1"
@@ -22,6 +26,12 @@
 				},
 				{
 					"name": "flatten1"
+				},
+				{
+					"name": "surrogateKey1"
+				},
+				{
+					"name": "select1"
 				}
 			],
 			"scriptLines": [
@@ -35,7 +45,8 @@
 				"     ),",
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
-				"     ignoreNoFilesFound: false) ~> source1",
+				"     ignoreNoFilesFound: false,",
+				"     format: 'parquet') ~> source1",
 				"source1 derive(primaryProfession = toString(primaryProfession),",
 				"          knownForTitles = toString(knownForTitles)) ~> derivedColumn1",
 				"derivedColumn1 derive(primaryProfession = split(replace(replace(replace(primaryProfession, \"[\", \"\"), \"]\", \"\"), \"\\\"\", \"\"), \",\"),",
@@ -50,7 +61,24 @@
 				"          knownForTitles",
 				"     ),",
 				"     skipDuplicateMapInputs: false,",
-				"     skipDuplicateMapOutputs: false) ~> flatten1"
+				"     skipDuplicateMapOutputs: false) ~> flatten1",
+				"flatten1 keyGenerate(output(row_id as long),",
+				"     startAt: 1L,",
+				"     stepValue: 1L) ~> surrogateKey1",
+				"surrogateKey1 select(mapColumn(",
+				"          NameKey = row_id,",
+				"          nconst,",
+				"          primaryName,",
+				"          birthYear,",
+				"          deathYear,",
+				"          knownForTitles",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> select1",
+				"select1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> sink2"
 			]
 		}
 	}

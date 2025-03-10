@@ -1,48 +1,43 @@
 {
-	"name": "namebasics",
+	"name": "title_basics_Parquet",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "AzureDataLakeStorage1",
 			"type": "LinkedServiceReference"
 		},
 		"annotations": [],
-		"type": "DelimitedText",
+		"type": "Parquet",
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobFSLocation",
-				"fileName": "name.basics.csv",
 				"fileSystem": "bronze"
 			},
-			"columnDelimiter": ",",
-			"encodingName": "ISO-8859-2",
-			"escapeChar": "\\",
-			"firstRowAsHeader": true,
-			"quoteChar": "\""
+			"compressionCodec": "snappy"
 		},
 		"schema": [
 			{
 				"name": "nconst",
-				"type": "String"
+				"type": "UTF8"
 			},
 			{
 				"name": "primaryName",
-				"type": "String"
+				"type": "UTF8"
 			},
 			{
 				"name": "birthYear",
-				"type": "String"
+				"type": "UTF8"
 			},
 			{
 				"name": "deathYear",
-				"type": "String"
+				"type": "UTF8"
 			},
 			{
 				"name": "primaryProfession",
-				"type": "String"
+				"type": "UTF8"
 			},
 			{
 				"name": "knownForTitles",
-				"type": "String"
+				"type": "UTF8"
 			}
 		]
 	}

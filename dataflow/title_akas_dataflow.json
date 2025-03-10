@@ -13,20 +13,28 @@
 				},
 				{
 					"dataset": {
-						"referenceName": "DelimitedText1",
+						"referenceName": "country_codes",
 						"type": "DatasetReference"
 					},
 					"name": "source2"
 				},
 				{
 					"dataset": {
-						"referenceName": "DelimitedText2",
+						"referenceName": "language_codes",
 						"type": "DatasetReference"
 					},
 					"name": "source3"
 				}
 			],
-			"sinks": [],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "SnowflakeTable1",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				}
+			],
 			"transformations": [
 				{
 					"name": "join1"
@@ -78,7 +86,9 @@
 				"          titleId,",
 				"          ordering,",
 				"          title,",
+				"          countrycode = region,",
 				"          countryname = {Country Name},",
+				"          languagecode = language,",
 				"          language = {ISO Language Name},",
 				"          types,",
 				"          attributes,",
@@ -92,7 +102,28 @@
 				"     ignoreSpaces: false,",
 				"     broadcast: 'auto')~> join2",
 				"select1 derive(countryname = iif(isNull(countryname), 'unknown', countryname),",
-				"          language = iif(isNull(language), 'unknown', language)) ~> derivedColumn1"
+				"          language = iif(isNull(language), 'unknown', language)) ~> derivedColumn1",
+				"derivedColumn1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          NAMEKEY as decimal(10,0),",
+				"          NCONST as string,",
+				"          PRIMARYNAME as string,",
+				"          BIRTHYEAR as decimal(38,0),",
+				"          DEATHYEAR as decimal(38,0),",
+				"          KNOWNFORTITLES as string,",
+				"          STARTDATE as timestamp,",
+				"          ENDDATE as timestamp,",
+				"          ISCURRENT as decimal(38,0)",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     stageInsert: true) ~> sink1"
 			]
 		}
 	}

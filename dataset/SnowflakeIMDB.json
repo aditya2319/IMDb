@@ -1,0 +1,65 @@
+{
+	"name": "SnowflakeIMDB",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "imdb",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "SnowflakeV2Table",
+		"schema": [
+			{
+				"name": "NAMEKEY",
+				"type": "NUMBER",
+				"precision": 10,
+				"scale": 0
+			},
+			{
+				"name": "DATE_SK",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "NCONST",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "PRIMARYNAME",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "BIRTHYEAR",
+				"type": "NUMBER",
+				"precision": 38,
+				"scale": 0
+			},
+			{
+				"name": "DEATHYEAR",
+				"type": "NUMBER",
+				"precision": 38,
+				"scale": 0
+			},
+			{
+				"name": "KNOWNFORTITLES",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "STARTDATE",
+				"type": "TIMESTAMP_NTZ"
+			},
+			{
+				"name": "ENDDATE",
+				"type": "TIMESTAMP_NTZ"
+			},
+			{
+				"name": "ISCURRENT",
+				"type": "NUMBER",
+				"precision": 38,
+				"scale": 0
+			}
+		],
+		"typeProperties": {
+			"schema": "IMDB_SCHEMA",
+			"table": "DIM_NAME"
+		}
+	}
+}
