@@ -109,7 +109,7 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "titlebasicspipeline",
+						"referenceName": "titlebasics_ds",
 						"type": "DatasetReference"
 					}
 				],

@@ -1,60 +1,56 @@
 {
-	"name": "titlebasics_ds",
+	"name": "titlebasicPar",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "imdbstorage",
 			"type": "LinkedServiceReference"
 		},
 		"annotations": [],
-		"type": "DelimitedText",
+		"type": "Parquet",
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobFSLocation",
-				"fileName": "title.basics.csv",
+				"fileName": "title.basics.parquet",
 				"fileSystem": "bronze"
 			},
-			"columnDelimiter": ",",
-			"encodingName": "ISO-8859-2",
-			"escapeChar": "\\",
-			"firstRowAsHeader": true,
-			"quoteChar": "\""
+			"compressionCodec": "snappy"
 		},
 		"schema": [
 			{
 				"name": "tconst",
-				"type": "String"
+				"type": "UTF8"
 			},
 			{
 				"name": "titleType",
-				"type": "String"
+				"type": "UTF8"
 			},
 			{
 				"name": "primaryTitle",
-				"type": "String"
+				"type": "UTF8"
 			},
 			{
 				"name": "originalTitle",
-				"type": "String"
+				"type": "UTF8"
 			},
 			{
 				"name": "isAdult",
-				"type": "String"
+				"type": "UTF8"
 			},
 			{
 				"name": "startYear",
-				"type": "String"
+				"type": "UTF8"
 			},
 			{
 				"name": "endYear",
-				"type": "String"
+				"type": "UTF8"
 			},
 			{
 				"name": "runtimeMinutes",
-				"type": "String"
+				"type": "UTF8"
 			},
 			{
 				"name": "genres",
-				"type": "String"
+				"type": "UTF8"
 			}
 		]
 	}
