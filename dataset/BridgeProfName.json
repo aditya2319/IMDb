@@ -1,0 +1,35 @@
+{
+	"name": "BridgeProfName",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "imdb_snowflake",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "SnowflakeV2Table",
+		"schema": [
+			{
+				"name": "TITLEPROFESSIONKEY",
+				"type": "NUMBER",
+				"precision": 10,
+				"scale": 0
+			},
+			{
+				"name": "PROFESSIONKEY",
+				"type": "NUMBER",
+				"precision": 10,
+				"scale": 0
+			},
+			{
+				"name": "NAMEKEY",
+				"type": "NUMBER",
+				"precision": 10,
+				"scale": 0
+			}
+		],
+		"typeProperties": {
+			"schema": "IMDB_SCHEMA",
+			"table": "BRIDGE_PROFESSION"
+		}
+	}
+}
