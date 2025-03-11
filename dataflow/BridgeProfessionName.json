@@ -6,7 +6,7 @@
 			"sources": [
 				{
 					"dataset": {
-						"referenceName": "BridgeProfession",
+						"referenceName": "ProfDim",
 						"type": "DatasetReference"
 					},
 					"name": "ProfDim"
@@ -23,9 +23,6 @@
 			"transformations": [
 				{
 					"name": "join1"
-				},
-				{
-					"name": "join2"
 				}
 			],
 			"scriptLines": [
@@ -47,14 +44,11 @@
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     format: 'table') ~> NameDim",
-				"join2 join(joinType:'inner',",
+				"ProfDim, NameDim join(ProfDim@NCONST == NameDim@NCONST,",
+				"     joinType:'inner',",
 				"     matchType:'exact',",
 				"     ignoreSpaces: false,",
-				"     broadcast: 'auto')~> join1",
-				"ProfDim join(joinType:'inner',",
-				"     matchType:'exact',",
-				"     ignoreSpaces: false,",
-				"     broadcast: 'auto')~> join2"
+				"     broadcast: 'auto')~> join1"
 			]
 		}
 	}

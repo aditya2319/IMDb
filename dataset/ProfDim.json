@@ -1,0 +1,31 @@
+{
+	"name": "ProfDim",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "imdb_snowflake",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "SnowflakeV2Table",
+		"schema": [
+			{
+				"name": "PROFESSIONKEY",
+				"type": "NUMBER",
+				"precision": 10,
+				"scale": 0
+			},
+			{
+				"name": "PROFESSION",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "NCONST",
+				"type": "VARCHAR"
+			}
+		],
+		"typeProperties": {
+			"schema": "IMDB_SCHEMA",
+			"table": "DIM_PROFESSION"
+		}
+	}
+}
