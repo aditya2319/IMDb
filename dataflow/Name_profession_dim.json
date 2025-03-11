@@ -22,14 +22,14 @@
 			"sinks": [
 				{
 					"dataset": {
-						"referenceName": "namedimsnowflake",
+						"referenceName": "SnowflakeTablenamedim",
 						"type": "DatasetReference"
 					},
 					"name": "sink1"
 				},
 				{
 					"dataset": {
-						"referenceName": "professionDIMsnowflake",
+						"referenceName": "SnowflakeTableprofessiondim",
 						"type": "DatasetReference"
 					},
 					"name": "sink2"
@@ -144,7 +144,6 @@
 				"     insertable:true,",
 				"     updateable:false,",
 				"     upsertable:false,",
-				"     truncate:true,",
 				"     format: 'table',",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true,",

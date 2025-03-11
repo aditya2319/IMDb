@@ -98,7 +98,12 @@
 				"     format: 'table',",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true,",
-				"     stageInsert: true) ~> sink2"
+				"     stageInsert: true,",
+				"     mapColumn(",
+				"          LANGUAGEKEY = LanguageKey,",
+				"          LANGUAGECODE = Codes,",
+				"          LANGUAGEDESCRIPTION = {ISO Language Name}",
+				"     )) ~> sink2"
 			]
 		}
 	}
