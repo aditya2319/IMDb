@@ -12,6 +12,10 @@
 					"name": "NameDim"
 				},
 				{
+					"dataset": {
+						"referenceName": "Parquetprofessiontitle",
+						"type": "DatasetReference"
+					},
 					"name": "ProfessionDim"
 				}
 			],
@@ -65,7 +69,9 @@
 				"          knownForTitles as string",
 				"     ),",
 				"     allowSchemaDrift: true,",
-				"     validateSchema: false) ~> ProfessionDim",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false,",
+				"     format: 'parquet') ~> ProfessionDim",
 				"NameDim select(mapColumn(",
 				"          nconst,",
 				"          primaryName,",
