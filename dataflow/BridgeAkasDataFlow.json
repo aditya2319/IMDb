@@ -1,0 +1,64 @@
+{
+	"name": "BridgeAkasDataFlow",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "LangDim",
+						"type": "DatasetReference"
+					},
+					"name": "LangDim"
+				},
+				{
+					"dataset": {
+						"referenceName": "TitleDim",
+						"type": "DatasetReference"
+					},
+					"name": "TitleDim"
+				},
+				{
+					"dataset": {
+						"referenceName": "RegionDim",
+						"type": "DatasetReference"
+					},
+					"name": "RegionDim"
+				}
+			],
+			"sinks": [],
+			"transformations": [],
+			"scriptLines": [
+				"source(output(",
+				"          LANGUAGEKEY as decimal(10,0),",
+				"          LANGUAGECODE as string,",
+				"          LANGUAGEDESCRIPTION as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     format: 'table') ~> LangDim",
+				"source(output(",
+				"          TITLEKEY as decimal(10,0),",
+				"          TCONST as string,",
+				"          TITLETYPE as string,",
+				"          PRIMARYTITLE as string,",
+				"          ORIGINALTITLE as string,",
+				"          ISADULT as decimal(10,0),",
+				"          STARTYEAR as string,",
+				"          RUNTIMEMINUTES as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     format: 'table') ~> TitleDim",
+				"source(output(",
+				"          REGIONKEY as decimal(10,0),",
+				"          REGIONCODE as string,",
+				"          REGIONDESCRIPTION as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     format: 'table') ~> RegionDim"
+			]
+		}
+	}
+}

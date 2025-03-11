@@ -1,5 +1,5 @@
 {
-	"name": "BridgeProfessionName",
+	"name": "BridgeProfessionNameDataFlow",
 	"properties": {
 		"type": "MappingDataFlow",
 		"typeProperties": {
@@ -86,7 +86,12 @@
 				"     format: 'table',",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true,",
-				"     stageInsert: true) ~> sink1"
+				"     stageInsert: true,",
+				"     mapColumn(",
+				"          TITLEPROFESSIONKEY = titleProfessionKey,",
+				"          PROFESSIONKEY,",
+				"          NAMEKEY",
+				"     )) ~> sink1"
 			]
 		}
 	}
