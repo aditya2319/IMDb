@@ -42,7 +42,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"dataflow": {
-						"referenceName": "region_dataflow",
+						"referenceName": "region_and_language_dataflow",
 						"type": "DataFlowReference"
 					},
 					"compute": {

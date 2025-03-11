@@ -43,92 +43,69 @@
 							{
 								"source": {
 									"name": "nconst",
-									"type": "String",
-									"physicalType": "String"
+									"type": "String"
 								},
 								"sink": {
 									"name": "nconst",
-									"type": "String",
-									"physicalType": "UTF8"
+									"type": "String"
 								}
 							},
 							{
 								"source": {
 									"name": "primaryName",
-									"type": "String",
-									"physicalType": "String"
+									"type": "String"
 								},
 								"sink": {
 									"name": "primaryName",
-									"type": "String",
-									"physicalType": "UTF8"
+									"type": "String"
 								}
 							},
 							{
 								"source": {
 									"name": "birthYear",
-									"type": "String",
-									"physicalType": "String"
+									"type": "String"
 								},
 								"sink": {
 									"name": "birthYear",
-									"type": "String",
-									"physicalType": "UTF8"
+									"type": "String"
 								}
 							},
 							{
 								"source": {
 									"name": "deathYear",
-									"type": "String",
-									"physicalType": "String"
+									"type": "String"
 								},
 								"sink": {
 									"name": "deathYear",
-									"type": "String",
-									"physicalType": "UTF8"
+									"type": "String"
 								}
 							},
 							{
 								"source": {
 									"name": "primaryProfession",
-									"type": "String",
-									"physicalType": "String"
+									"type": "String"
 								},
 								"sink": {
 									"name": "primaryProfession",
-									"type": "String",
-									"physicalType": "UTF8"
+									"type": "String"
 								}
 							},
 							{
 								"source": {
 									"name": "knownForTitles",
-									"type": "String",
-									"physicalType": "String"
+									"type": "String"
 								},
 								"sink": {
 									"name": "knownForTitles",
-									"type": "String",
-									"physicalType": "UTF8"
+									"type": "String"
 								}
 							}
-						],
-						"typeConversion": true,
-						"typeConversionSettings": {
-							"allowDataTruncation": true,
-							"treatBooleanAsNumber": false
-						}
+						]
 					}
 				},
 				"inputs": [
 					{
 						"referenceName": "namebasics",
-						"type": "DatasetReference"
-					}
-				],
-				"outputs": [
-					{
-						"referenceName": "ParquetNAMEBASICS",
 						"type": "DatasetReference"
 					}
 				]

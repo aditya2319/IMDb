@@ -1,15 +1,22 @@
 {
-	"name": "title_dataflow",
+	"name": "title_and_genre_dataflow",
 	"properties": {
 		"type": "MappingDataFlow",
 		"typeProperties": {
 			"sources": [
 				{
 					"dataset": {
-						"referenceName": "titlebasics",
+						"referenceName": "Parquet3",
 						"type": "DatasetReference"
 					},
-					"name": "source1"
+					"name": "GenreDim"
+				},
+				{
+					"dataset": {
+						"referenceName": "Parquet3",
+						"type": "DatasetReference"
+					},
+					"name": "TitleDim"
 				}
 			],
 			"sinks": [],
@@ -19,6 +26,18 @@
 				},
 				{
 					"name": "flatten1"
+				},
+				{
+					"name": "derivedColumn2"
+				},
+				{
+					"name": "select1"
+				},
+				{
+					"name": "surrogateKey1"
+				},
+				{
+					"name": "select2"
 				}
 			],
 			"scriptLines": [
@@ -35,22 +54,53 @@
 				"     ),",
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
-				"     ignoreNoFilesFound: false) ~> source1",
-				"source1 derive(genres = split(replace(replace(replace(genres, \"[\", \"\"), \"]\", \"\"), \"\\\"\", \"\"), \",\")) ~> derivedColumn1",
-				"derivedColumn1 foldDown(unroll(genres),",
+				"     ignoreNoFilesFound: false,",
+				"     format: 'parquet') ~> GenreDim",
+				"source(output(",
+				"          tconst as string,",
+				"          titleType as string,",
+				"          primaryTitle as string,",
+				"          originalTitle as string,",
+				"          isAdult as string,",
+				"          startYear as string,",
+				"          endYear as string,",
+				"          runtimeMinutes as string,",
+				"          genres as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false,",
+				"     format: 'parquet') ~> TitleDim",
+				"GenreDim derive(genres = split(replace(replace(replace(genres, \"[\", \"\"), \"]\", \"\"), \"\\\"\", \"\"), \",\")) ~> derivedColumn1",
+				"select2 foldDown(unroll(genres),",
 				"     mapColumn(",
+				"          genres = genres,",
+				"          tconst",
+				"     ),",
+				"     skipDuplicateMapInputs: false,",
+				"     skipDuplicateMapOutputs: false) ~> flatten1",
+				"TitleDim derive(startYear = iif(isNull(startYear),'unknown', startYear),",
+				"          runtimeMinutes = iif(isNull(runtimeMinutes), 'unknown', runtimeMinutes)) ~> derivedColumn2",
+				"derivedColumn2 select(mapColumn(",
 				"          tconst,",
 				"          titleType,",
 				"          primaryTitle,",
 				"          originalTitle,",
 				"          isAdult,",
-				"          startYear,",
-				"          endYear,",
-				"          runtimeMinutes,",
+				"          ReleaseYear = startYear,",
+				"          runtimeMinutes",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> select1",
+				"select1 keyGenerate(output(TitleKey as long),",
+				"     startAt: 1L,",
+				"     stepValue: 1L) ~> surrogateKey1",
+				"derivedColumn1 select(mapColumn(",
+				"          tconst,",
 				"          genres",
 				"     ),",
-				"     skipDuplicateMapInputs: false,",
-				"     skipDuplicateMapOutputs: false) ~> flatten1"
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> select2"
 			]
 		}
 	}

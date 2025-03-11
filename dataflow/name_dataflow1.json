@@ -99,6 +99,7 @@
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true,",
 				"     stageInsert: true,",
+				"     outputAssertFailedRows: true,",
 				"     mapColumn(",
 				"          NAMEKEY = NameKey,",
 				"          NCONST = nconst,",

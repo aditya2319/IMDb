@@ -1,5 +1,5 @@
 {
-	"name": "region_dataflow",
+	"name": "region_and_language_dataflow",
 	"properties": {
 		"type": "MappingDataFlow",
 		"typeProperties": {
@@ -9,7 +9,14 @@
 						"referenceName": "country_codes",
 						"type": "DatasetReference"
 					},
-					"name": "source1"
+					"name": "RegionDim"
+				},
+				{
+					"dataset": {
+						"referenceName": "DelimitedText1",
+						"type": "DatasetReference"
+					},
+					"name": "LanguageDim"
 				}
 			],
 			"sinks": [
@@ -24,6 +31,9 @@
 			"transformations": [
 				{
 					"name": "surrogateKey1"
+				},
+				{
+					"name": "surrogateKey2"
 				}
 			],
 			"scriptLines": [
@@ -33,10 +43,20 @@
 				"     ),",
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
-				"     ignoreNoFilesFound: false) ~> source1",
-				"source1 keyGenerate(output(RegionKey as long),",
+				"     ignoreNoFilesFound: false) ~> RegionDim",
+				"source(output(",
+				"          {ISO Language Name} as string,",
+				"          Codes as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> LanguageDim",
+				"RegionDim keyGenerate(output(RegionKey as long),",
 				"     startAt: 1L,",
 				"     stepValue: 1L) ~> surrogateKey1",
+				"LanguageDim keyGenerate(output(LanguageKey as long),",
+				"     startAt: 1L,",
+				"     stepValue: 1L) ~> surrogateKey2",
 				"surrogateKey1 sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     input(",
