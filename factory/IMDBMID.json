@@ -1,0 +1,9 @@
+{
+	"name": "IMDBMID",
+	"properties": {
+		"globalConfigurations": {
+			"PipelineBillingEnabled": "false"
+		}
+	},
+	"location": "eastus"
+}
