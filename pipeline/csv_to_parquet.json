@@ -42,70 +42,129 @@
 						"mappings": [
 							{
 								"source": {
-									"name": "nconst",
-									"type": "String"
+									"name": "tconst",
+									"type": "String",
+									"physicalType": "String"
 								},
 								"sink": {
-									"name": "nconst",
-									"type": "String"
+									"name": "tconst",
+									"type": "String",
+									"physicalType": "UTF8"
 								}
 							},
 							{
 								"source": {
-									"name": "primaryName",
-									"type": "String"
+									"name": "titleType",
+									"type": "String",
+									"physicalType": "String"
 								},
 								"sink": {
-									"name": "primaryName",
-									"type": "String"
+									"name": "titleType",
+									"type": "String",
+									"physicalType": "UTF8"
 								}
 							},
 							{
 								"source": {
-									"name": "birthYear",
-									"type": "String"
+									"name": "primaryTitle",
+									"type": "String",
+									"physicalType": "String"
 								},
 								"sink": {
-									"name": "birthYear",
-									"type": "String"
+									"name": "primaryTitle",
+									"type": "String",
+									"physicalType": "UTF8"
 								}
 							},
 							{
 								"source": {
-									"name": "deathYear",
-									"type": "String"
+									"name": "originalTitle",
+									"type": "String",
+									"physicalType": "String"
 								},
 								"sink": {
-									"name": "deathYear",
-									"type": "String"
+									"name": "originalTitle",
+									"type": "String",
+									"physicalType": "UTF8"
 								}
 							},
 							{
 								"source": {
-									"name": "primaryProfession",
-									"type": "String"
+									"name": "isAdult",
+									"type": "String",
+									"physicalType": "String"
 								},
 								"sink": {
-									"name": "primaryProfession",
-									"type": "String"
+									"name": "isAdult",
+									"type": "String",
+									"physicalType": "UTF8"
 								}
 							},
 							{
 								"source": {
-									"name": "knownForTitles",
-									"type": "String"
+									"name": "startYear",
+									"type": "String",
+									"physicalType": "String"
 								},
 								"sink": {
-									"name": "knownForTitles",
-									"type": "String"
+									"name": "startYear",
+									"type": "String",
+									"physicalType": "UTF8"
+								}
+							},
+							{
+								"source": {
+									"name": "endYear",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "endYear",
+									"type": "String",
+									"physicalType": "UTF8"
+								}
+							},
+							{
+								"source": {
+									"name": "runtimeMinutes",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "runtimeMinutes",
+									"type": "String",
+									"physicalType": "UTF8"
+								}
+							},
+							{
+								"source": {
+									"name": "genres",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "genres",
+									"type": "String",
+									"physicalType": "UTF8"
 								}
 							}
-						]
+						],
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
 					}
 				},
 				"inputs": [
 					{
-						"referenceName": "namebasics",
+						"referenceName": "DelimitedText2",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "title_basics_Parquet4",
 						"type": "DatasetReference"
 					}
 				]

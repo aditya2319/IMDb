@@ -13,22 +13,34 @@
 				},
 				{
 					"dataset": {
-						"referenceName": "Parquet3",
+						"referenceName": "Parquet5",
 						"type": "DatasetReference"
 					},
 					"name": "TitleDim"
 				}
 			],
-			"sinks": [],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "SnowflakeTable2",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				},
+				{
+					"dataset": {
+						"referenceName": "SnowflakeTable3",
+						"type": "DatasetReference"
+					},
+					"name": "sink2"
+				}
+			],
 			"transformations": [
 				{
 					"name": "derivedColumn1"
 				},
 				{
 					"name": "flatten1"
-				},
-				{
-					"name": "derivedColumn2"
 				},
 				{
 					"name": "select1"
@@ -38,6 +50,12 @@
 				},
 				{
 					"name": "select2"
+				},
+				{
+					"name": "surrogateKey2"
+				},
+				{
+					"name": "derivedColumn2"
 				}
 			],
 			"scriptLines": [
@@ -79,9 +97,7 @@
 				"     ),",
 				"     skipDuplicateMapInputs: false,",
 				"     skipDuplicateMapOutputs: false) ~> flatten1",
-				"TitleDim derive(startYear = iif(isNull(startYear),'unknown', startYear),",
-				"          runtimeMinutes = iif(isNull(runtimeMinutes), 'unknown', runtimeMinutes)) ~> derivedColumn2",
-				"derivedColumn2 select(mapColumn(",
+				"TitleDim select(mapColumn(",
 				"          tconst,",
 				"          titleType,",
 				"          primaryTitle,",
@@ -100,7 +116,63 @@
 				"          genres",
 				"     ),",
 				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true) ~> select2"
+				"     skipDuplicateMapOutputs: true) ~> select2",
+				"flatten1 keyGenerate(output(GenreKey as long),",
+				"     startAt: 1L,",
+				"     stepValue: 1L) ~> surrogateKey2",
+				"surrogateKey1 derive(isAdult = toString(isAdult)) ~> derivedColumn2",
+				"surrogateKey2 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          GENREKEY as decimal(10,0),",
+				"          GENRENAME as string,",
+				"          TCONST as string",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     truncate:true,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     stageInsert: true,",
+				"     mapColumn(",
+				"          GENREKEY = GenreKey,",
+				"          GENRENAME = genres,",
+				"          TCONST = tconst",
+				"     )) ~> sink1",
+				"derivedColumn2 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          TITLEKEY as decimal(10,0),",
+				"          TCONST as string,",
+				"          TITLETYPE as string,",
+				"          PRIMARYTITLE as string,",
+				"          ORIGINALTITLE as string,",
+				"          ISADULT as decimal(10,0),",
+				"          STARTYEAR as string,",
+				"          RUNTIMEMINUTES as string",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     truncate:true,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     stageInsert: true,",
+				"     mapColumn(",
+				"          TITLEKEY = TitleKey,",
+				"          TCONST = tconst,",
+				"          TITLETYPE = titleType,",
+				"          PRIMARYTITLE = primaryTitle,",
+				"          ORIGINALTITLE = originalTitle,",
+				"          ISADULT = isAdult,",
+				"          STARTYEAR = ReleaseYear,",
+				"          RUNTIMEMINUTES = runtimeMinutes",
+				"     )) ~> sink2"
 			]
 		}
 	}
