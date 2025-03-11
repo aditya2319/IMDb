@@ -14,10 +14,6 @@
 			],
 			"sinks": [
 				{
-					"dataset": {
-						"referenceName": "SNOWFLAKEIMDBNAME",
-						"type": "DatasetReference"
-					},
 					"name": "sink1"
 				}
 			],
@@ -82,23 +78,8 @@
 				"     skipDuplicateMapOutputs: true) ~> select1",
 				"select1 sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
-				"     input(",
-				"          NAMEKEY as decimal(10,0),",
-				"          NCONST as string,",
-				"          PRIMARYNAME as string,",
-				"          BIRTHYEAR as string,",
-				"          DEATHYEAR as string,",
-				"          KNOWNFORTITLES as string,",
-				"          PROFESSION as string",
-				"     ),",
-				"     deletable:false,",
-				"     insertable:true,",
-				"     updateable:false,",
-				"     upsertable:false,",
-				"     format: 'table',",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true,",
-				"     stageInsert: true,",
 				"     outputAssertFailedRows: true,",
 				"     mapColumn(",
 				"          NAMEKEY = NameKey,",
@@ -108,7 +89,8 @@
 				"          DEATHYEAR = deathYear,",
 				"          KNOWNFORTITLES = knownForTitles,",
 				"          PROFESSION = primaryProfession",
-				"     )) ~> sink1"
+				"     ),",
+				"     format: 'table') ~> sink1"
 			]
 		}
 	}
