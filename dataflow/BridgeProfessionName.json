@@ -1,22 +1,22 @@
 {
-	"name": "BridgeGenre",
+	"name": "BridgeProfessionName",
 	"properties": {
 		"type": "MappingDataFlow",
 		"typeProperties": {
 			"sources": [
 				{
 					"dataset": {
-						"referenceName": "ParquetTitleBasics",
+						"referenceName": "BridgeProfession",
 						"type": "DatasetReference"
 					},
-					"name": "source1"
+					"name": "ProfDim"
 				},
 				{
 					"dataset": {
-						"referenceName": "BridgeDim",
+						"referenceName": "NameDim",
 						"type": "DatasetReference"
 					},
-					"name": "source2"
+					"name": "NameDim"
 				}
 			],
 			"sinks": [],
@@ -25,54 +25,36 @@
 					"name": "join1"
 				},
 				{
-					"name": "select1"
+					"name": "join2"
 				}
 			],
 			"scriptLines": [
 				"source(output(",
-				"          tconst as string,",
-				"          titleType as string,",
-				"          primaryTitle as string,",
-				"          originalTitle as string,",
-				"          isAdult as string,",
-				"          startYear as string,",
-				"          endYear as string,",
-				"          runtimeMinutes as string,",
-				"          genres as string",
+				"          PROFESSIONKEY as decimal(10,0),",
+				"          PROFESSION as string,",
+				"          NCONST as string",
 				"     ),",
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
-				"     ignoreNoFilesFound: false,",
-				"     format: 'parquet') ~> source1",
+				"     format: 'table') ~> ProfDim",
 				"source(output(",
-				"          GENREKEY as decimal(10,0),",
-				"          GENRENAME as string,",
-				"          TCONST as string",
+				"          NAMEKEY as decimal(10,0),",
+				"          NCONST as string,",
+				"          PRIMARYNAME as string,",
+				"          BIRTHYEAR as string,",
+				"          DEATHYEAR as string",
 				"     ),",
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
-				"     format: 'table') ~> source2",
-				"source1, source2 join(ERROR_FUNCTION('') == ERROR_FUNCTION(''),",
-				"     joinType:'inner',",
+				"     format: 'table') ~> NameDim",
+				"join2 join(joinType:'inner',",
 				"     matchType:'exact',",
 				"     ignoreSpaces: false,",
 				"     broadcast: 'auto')~> join1",
-				"join1 select(mapColumn(",
-				"          tconst = source1@tconst,",
-				"          titleType,",
-				"          primaryTitle,",
-				"          originalTitle,",
-				"          isAdult,",
-				"          startYear,",
-				"          endYear,",
-				"          runtimeMinutes,",
-				"          genres,",
-				"          GENREKEY,",
-				"          GENRENAME,",
-				"          TCONST = source2@TCONST",
-				"     ),",
-				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true) ~> select1"
+				"ProfDim join(joinType:'inner',",
+				"     matchType:'exact',",
+				"     ignoreSpaces: false,",
+				"     broadcast: 'auto')~> join2"
 			]
 		}
 	}
