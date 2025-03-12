@@ -1,12 +1,10 @@
 {
-	"name": "Fact_TitleRatings",
+	"name": "Facr_Episodes",
 	"properties": {
 		"activities": [
 			{
 				"name": "Data flow1",
 				"type": "ExecuteDataFlow",
-				"state": "Inactive",
-				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [],
 				"policy": {
 					"timeout": "0.12:00:00",
@@ -18,7 +16,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"dataflow": {
-						"referenceName": "Fact__TitleRatings",
+						"referenceName": "Fact_Episodes",
 						"type": "DataFlowReference"
 					},
 					"compute": {
