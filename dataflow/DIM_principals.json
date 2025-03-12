@@ -1,5 +1,5 @@
 {
-	"name": "factprincipals",
+	"name": "DIM_principals",
 	"properties": {
 		"type": "MappingDataFlow",
 		"typeProperties": {
