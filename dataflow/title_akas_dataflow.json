@@ -13,23 +13,30 @@
 				},
 				{
 					"dataset": {
-						"referenceName": "country_codes",
+						"referenceName": "SnowflakeTable3",
 						"type": "DatasetReference"
 					},
 					"name": "source2"
 				},
 				{
 					"dataset": {
-						"referenceName": "language_codes",
+						"referenceName": "languageDIMsnowflake",
 						"type": "DatasetReference"
 					},
 					"name": "source3"
+				},
+				{
+					"dataset": {
+						"referenceName": "SnowflakeTableregion",
+						"type": "DatasetReference"
+					},
+					"name": "source4"
 				}
 			],
 			"sinks": [
 				{
 					"dataset": {
-						"referenceName": "SnowflakeTable1",
+						"referenceName": "SnowflakeTable10",
 						"type": "DatasetReference"
 					},
 					"name": "sink1"
@@ -40,13 +47,16 @@
 					"name": "join1"
 				},
 				{
-					"name": "select1"
-				},
-				{
 					"name": "join2"
 				},
 				{
-					"name": "derivedColumn1"
+					"name": "join3"
+				},
+				{
+					"name": "surrogateKey1"
+				},
+				{
+					"name": "select1"
 				}
 			],
 			"scriptLines": [
@@ -64,57 +74,71 @@
 				"     validateSchema: false,",
 				"     ignoreNoFilesFound: false) ~> source1",
 				"source(output(",
-				"          CountryCode as string,",
-				"          {Country Name} as string",
+				"          TITLEKEY as decimal(10,0),",
+				"          TCONST as string,",
+				"          TITLETYPE as string,",
+				"          PRIMARYTITLE as string,",
+				"          ORIGINALTITLE as string,",
+				"          ISADULT as decimal(10,0),",
+				"          STARTYEAR as string,",
+				"          RUNTIMEMINUTES as string",
 				"     ),",
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
-				"     ignoreNoFilesFound: false) ~> source2",
+				"     format: 'table') ~> source2",
 				"source(output(",
-				"          {ISO Language Name} as string,",
-				"          Codes as string",
+				"          LANGUAGEKEY as decimal(10,0),",
+				"          LANGUAGECODE as string,",
+				"          LANGUAGEDESCRIPTION as string",
 				"     ),",
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
-				"     ignoreNoFilesFound: false) ~> source3",
-				"source1, source2 join(region == CountryCode,",
-				"     joinType:'left',",
+				"     format: 'table') ~> source3",
+				"source(output(",
+				"          REGIONKEY as decimal(10,0),",
+				"          REGIONCODE as string,",
+				"          REGIONDESCRIPTION as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     format: 'table') ~> source4",
+				"source1, source2 join(titleId == TCONST,",
+				"     joinType:'inner',",
 				"     matchType:'exact',",
 				"     ignoreSpaces: false,",
 				"     broadcast: 'auto')~> join1",
-				"join2 select(mapColumn(",
-				"          titleId,",
-				"          ordering,",
-				"          title,",
-				"          countrycode = region,",
-				"          countryname = {Country Name},",
-				"          languagecode = language,",
-				"          language = {ISO Language Name},",
-				"          types,",
-				"          attributes,",
-				"          isOriginalTitle",
-				"     ),",
-				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true) ~> select1",
-				"join1, source3 join(language == Codes,",
+				"join1, source3 join(language == LANGUAGECODE,",
 				"     joinType:'left',",
 				"     matchType:'exact',",
 				"     ignoreSpaces: false,",
 				"     broadcast: 'auto')~> join2",
-				"select1 derive(countryname = iif(isNull(countryname), 'unknown', countryname),",
-				"          language = iif(isNull(language), 'unknown', language)) ~> derivedColumn1",
-				"derivedColumn1 sink(allowSchemaDrift: true,",
+				"join2, source4 join(region == REGIONCODE,",
+				"     joinType:'left',",
+				"     matchType:'exact',",
+				"     ignoreSpaces: false,",
+				"     broadcast: 'auto')~> join3",
+				"join3 keyGenerate(output(TitleAkasKey as long),",
+				"     startAt: 1L,",
+				"     stepValue: 1L) ~> surrogateKey1",
+				"surrogateKey1 select(mapColumn(",
+				"          isOriginalTitle,",
+				"          TITLEKEY,",
+				"          LANGUAGEKEY,",
+				"          REGIONKEY,",
+				"          TitleAkasKey,",
+				"          titleAkas = title",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> select1",
+				"select1 sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     input(",
-				"          NAMEKEY as decimal(10,0),",
-				"          NCONST as string,",
-				"          PRIMARYNAME as string,",
-				"          BIRTHYEAR as decimal(38,0),",
-				"          DEATHYEAR as decimal(38,0),",
-				"          KNOWNFORTITLES as string,",
-				"          STARTDATE as timestamp,",
-				"          ENDDATE as timestamp,",
-				"          ISCURRENT as decimal(38,0)",
+				"          TITLEAKASKEY as decimal(10,0),",
+				"          TITLEKEY as decimal(10,0),",
+				"          REGIONKEY as decimal(10,0),",
+				"          LANGUAGEKEY as decimal(10,0),",
+				"          AKASTITLE as string,",
+				"          ISORIGINALTITLE as decimal(10,0)",
 				"     ),",
 				"     deletable:false,",
 				"     insertable:true,",
@@ -123,7 +147,15 @@
 				"     format: 'table',",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true,",
-				"     stageInsert: true) ~> sink1"
+				"     stageInsert: true,",
+				"     mapColumn(",
+				"          TITLEAKASKEY = TitleAkasKey,",
+				"          TITLEKEY,",
+				"          REGIONKEY,",
+				"          LANGUAGEKEY,",
+				"          AKASTITLE = titleAkas,",
+				"          ISORIGINALTITLE = isOriginalTitle",
+				"     )) ~> sink1"
 			]
 		}
 	}
