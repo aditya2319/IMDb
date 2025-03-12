@@ -1,5 +1,5 @@
 {
-	"name": "Fact_TitleRatings",
+	"name": "Fact_TitleRatings_Pipeline",
 	"properties": {
 		"activities": [
 			{
