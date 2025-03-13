@@ -6,14 +6,14 @@
 			"sources": [
 				{
 					"dataset": {
-						"referenceName": "country_codes",
+						"referenceName": "DelimitedText3",
 						"type": "DatasetReference"
 					},
 					"name": "RegionDim"
 				},
 				{
 					"dataset": {
-						"referenceName": "DelimitedText1",
+						"referenceName": "DelimitedText4",
 						"type": "DatasetReference"
 					},
 					"name": "LanguageDim"
@@ -45,7 +45,7 @@
 			],
 			"scriptLines": [
 				"source(output(",
-				"          CountryCode as string,",
+				"          {Country Code} as string,",
 				"          {Country Name} as string",
 				"     ),",
 				"     allowSchemaDrift: true,",
@@ -75,13 +75,14 @@
 				"     insertable:true,",
 				"     updateable:false,",
 				"     upsertable:false,",
+				"     truncate:true,",
 				"     format: 'table',",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true,",
 				"     stageInsert: true,",
 				"     mapColumn(",
 				"          REGIONKEY = RegionKey,",
-				"          REGIONCODE = CountryCode,",
+				"          REGIONCODE = {Country Code},",
 				"          REGIONDESCRIPTION = {Country Name}",
 				"     )) ~> sink1",
 				"surrogateKey2 sink(allowSchemaDrift: true,",
@@ -95,6 +96,7 @@
 				"     insertable:true,",
 				"     updateable:false,",
 				"     upsertable:false,",
+				"     truncate:true,",
 				"     format: 'table',",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true,",
