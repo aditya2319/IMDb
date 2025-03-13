@@ -3,7 +3,15 @@
 	"properties": {
 		"type": "MappingDataFlow",
 		"typeProperties": {
-			"sources": [],
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "DelimitedText3",
+						"type": "DatasetReference"
+					},
+					"name": "source1"
+				}
+			],
 			"sinks": [
 				{
 					"dataset": {
@@ -25,6 +33,13 @@
 				}
 			],
 			"scriptLines": [
+				"source(output(",
+				"          {Country Code} as string,",
+				"          {Country Name} as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> source1",
 				" join(select2@tconst == source3@TCONST,",
 				"     joinType:'inner',",
 				"     matchType:'exact',",
