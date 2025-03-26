@@ -6,14 +6,14 @@
 			"sources": [
 				{
 					"dataset": {
-						"referenceName": "SnowflakeNamefactprincipals",
+						"referenceName": "SnowflakeTablenameDIM",
 						"type": "DatasetReference"
 					},
 					"name": "source1"
 				},
 				{
 					"dataset": {
-						"referenceName": "SnowflakeTitlebasicsfactprincipals",
+						"referenceName": "SnowflakeTabletitledim",
 						"type": "DatasetReference"
 					},
 					"name": "source2"
@@ -29,7 +29,7 @@
 			"sinks": [
 				{
 					"dataset": {
-						"referenceName": "Snowflakefactprincipaltable",
+						"referenceName": "SnowflakeTableDIM_Principles",
 						"type": "DatasetReference"
 					},
 					"name": "sink1"
@@ -96,14 +96,14 @@
 				"     ignoreSpaces: false,",
 				"     broadcast: 'auto')~> join3",
 				"join3 select(mapColumn(",
-				"          ORDERING,",
-				"          CATEGORY,",
-				"          JOB,",
-				"          CHARACTERS,",
+				"          tconst = source3@tconst,",
+				"          ordering,",
+				"          nconst = source3@nconst,",
+				"          category,",
+				"          job,",
+				"          characters,",
 				"          NAMEKEY,",
-				"          NCONST = source1@NCONST,",
-				"          TITLEKEY,",
-				"          TCONST = source2@TCONST",
+				"          TITLEKEY",
 				"     ),",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true) ~> select1",
@@ -119,13 +119,14 @@
 				"          ORDERING as decimal(38,0),",
 				"          CATEGORY as string,",
 				"          JOB as string,",
-				"          CHARACTERS as string",
+				"          CHARACTERS as string,",
+				"          TCONST as string,",
+				"          NCONST as string",
 				"     ),",
 				"     deletable:false,",
 				"     insertable:true,",
 				"     updateable:false,",
 				"     upsertable:false,",
-				"     truncate:true,",
 				"     format: 'table',",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true,",
@@ -134,10 +135,12 @@
 				"          PRINCIPALKEY = PrincipalKey,",
 				"          NAMEKEY,",
 				"          TITLEKEY,",
-				"          ORDERING,",
-				"          CATEGORY,",
-				"          JOB,",
-				"          CHARACTERS",
+				"          ORDERING = ordering,",
+				"          CATEGORY = category,",
+				"          JOB = job,",
+				"          CHARACTERS = characters,",
+				"          TCONST = tconst,",
+				"          NCONST = nconst",
 				"     )) ~> sink1"
 			]
 		}
