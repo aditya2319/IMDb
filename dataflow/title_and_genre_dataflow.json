@@ -17,19 +17,19 @@
 						"type": "DatasetReference"
 					},
 					"name": "TitleDim"
+				},
+				{
+					"dataset": {
+						"referenceName": "title_akas",
+						"type": "DatasetReference"
+					},
+					"name": "source1"
 				}
 			],
 			"sinks": [
 				{
 					"dataset": {
-						"referenceName": "SnowflakeTable2",
-						"type": "DatasetReference"
-					},
-					"name": "sink1"
-				},
-				{
-					"dataset": {
-						"referenceName": "SnowflakeTable3",
+						"referenceName": "SnowflakeTable14",
 						"type": "DatasetReference"
 					},
 					"name": "sink2"
@@ -56,6 +56,9 @@
 				},
 				{
 					"name": "derivedColumn2"
+				},
+				{
+					"name": "join1"
 				}
 			],
 			"scriptLines": [
@@ -89,22 +92,37 @@
 				"     validateSchema: false,",
 				"     ignoreNoFilesFound: false,",
 				"     format: 'parquet') ~> TitleDim",
+				"source(output(",
+				"          titleId as string,",
+				"          ordering as string,",
+				"          title as string,",
+				"          region as string,",
+				"          language as string,",
+				"          types as string,",
+				"          attributes as string,",
+				"          isOriginalTitle as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> source1",
 				"GenreDim derive(genres = split(replace(replace(replace(genres, \"[\", \"\"), \"]\", \"\"), \"\\\"\", \"\"), \",\")) ~> derivedColumn1",
 				"select2 foldDown(unroll(genres),",
 				"     mapColumn(",
-				"          genres = genres,",
+				"          genres,",
 				"          tconst",
 				"     ),",
 				"     skipDuplicateMapInputs: false,",
 				"     skipDuplicateMapOutputs: false) ~> flatten1",
-				"TitleDim select(mapColumn(",
+				"join1 select(mapColumn(",
 				"          tconst,",
 				"          titleType,",
 				"          primaryTitle,",
 				"          originalTitle,",
 				"          isAdult,",
-				"          ReleaseYear = startYear,",
-				"          runtimeMinutes",
+				"          startYear,",
+				"          runtimeMinutes,",
+				"          region,",
+				"          language",
 				"     ),",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true) ~> select1",
@@ -124,27 +142,11 @@
 				"          primaryTitle = left(primaryTitle, 255),",
 				"          originalTitle = left(originalTitle, 255),",
 				"          runtimeMinutes = toInteger(runtimeMinutes)) ~> derivedColumn2",
-				"surrogateKey2 sink(allowSchemaDrift: true,",
-				"     validateSchema: false,",
-				"     input(",
-				"          GENREKEY as decimal(10,0),",
-				"          GENRENAME as string,",
-				"          TCONST as string",
-				"     ),",
-				"     deletable:false,",
-				"     insertable:true,",
-				"     updateable:false,",
-				"     upsertable:false,",
-				"     truncate:true,",
-				"     format: 'table',",
-				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true,",
-				"     stageInsert: true,",
-				"     mapColumn(",
-				"          GENREKEY = GenreKey,",
-				"          GENRENAME = genres,",
-				"          TCONST = tconst",
-				"     )) ~> sink1",
+				"TitleDim, source1 join(tconst == titleId,",
+				"     joinType:'inner',",
+				"     matchType:'exact',",
+				"     ignoreSpaces: false,",
+				"     broadcast: 'auto')~> join1",
 				"derivedColumn2 sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     input(",
@@ -155,7 +157,9 @@
 				"          ORIGINALTITLE as string,",
 				"          ISADULT as decimal(10,0),",
 				"          STARTYEAR as string,",
-				"          RUNTIMEMINUTES as string",
+				"          RUNTIMEMINUTES as string,",
+				"          REGION as string,",
+				"          LANGUAGE as string",
 				"     ),",
 				"     deletable:false,",
 				"     insertable:true,",
@@ -173,8 +177,10 @@
 				"          PRIMARYTITLE = primaryTitle,",
 				"          ORIGINALTITLE = originalTitle,",
 				"          ISADULT = isAdult,",
-				"          STARTYEAR = ReleaseYear,",
-				"          RUNTIMEMINUTES = runtimeMinutes",
+				"          STARTYEAR = startYear,",
+				"          RUNTIMEMINUTES = runtimeMinutes,",
+				"          REGION = region,",
+				"          LANGUAGE = language",
 				"     )) ~> sink2"
 			]
 		}
