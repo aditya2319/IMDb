@@ -26,6 +26,9 @@
 						"type": "DatasetReference"
 					},
 					"name": "sink2"
+				},
+				{
+					"name": "sink3"
 				}
 			],
 			"transformations": [
@@ -122,7 +125,11 @@
 				"          PROFESSIONKEY = ProfessionKey,",
 				"          PROFESSION = Profession,",
 				"          NCONST = nconst",
-				"     )) ~> sink2"
+				"     )) ~> sink2",
+				"surrogateKey1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> sink3"
 			]
 		}
 	}
