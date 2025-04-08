@@ -1,0 +1,31 @@
+{
+	"name": "SnowflakeTableregion",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "imdb",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "SnowflakeV2Table",
+		"schema": [
+			{
+				"name": "REGIONKEY",
+				"type": "NUMBER",
+				"precision": 10,
+				"scale": 0
+			},
+			{
+				"name": "REGIONCODE",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "REGIONDESCRIPTION",
+				"type": "VARCHAR"
+			}
+		],
+		"typeProperties": {
+			"schema": "IMDB_SCHEMA",
+			"table": "DIM_REGION"
+		}
+	}
+}

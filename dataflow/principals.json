@@ -1,0 +1,91 @@
+{
+	"name": "principals",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "DelimitedText3",
+						"type": "DatasetReference"
+					},
+					"name": "source1"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "SnowflakeTable11",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				}
+			],
+			"transformations": [
+				{
+					"name": "join2"
+				},
+				{
+					"name": "select1"
+				},
+				{
+					"name": "surrogateKey1"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          {Country Code} as string,",
+				"          {Country Name} as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> source1",
+				" join(select2@tconst == source3@TCONST,",
+				"     joinType:'inner',",
+				"     matchType:'exact',",
+				"     ignoreSpaces: false,",
+				"     broadcast: 'auto')~> join2",
+				"join2 select(mapColumn(",
+				"          ordering,",
+				"          category,",
+				"          job,",
+				"          characters,",
+				"          NAMEKEY,",
+				"          TITLEKEY",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> select1",
+				"select1 keyGenerate(output(PrincipalKey as long),",
+				"     startAt: 1L,",
+				"     stepValue: 1L) ~> surrogateKey1",
+				"surrogateKey1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          PRINCIPALKEY as decimal(10,0),",
+				"          NAMEKEY as decimal(10,0),",
+				"          TITLEKEY as decimal(10,0),",
+				"          ORDERING as decimal(38,0),",
+				"          CATEGORY as string,",
+				"          JOB as string,",
+				"          CHARACTERS as string",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     stageInsert: true,",
+				"     mapColumn(",
+				"          ORDERING = ordering,",
+				"          CATEGORY = category,",
+				"          JOB = job,",
+				"          CHARACTERS = characters,",
+				"          NAMEKEY,",
+				"          TITLEKEY",
+				"     )) ~> sink1"
+			]
+		}
+	}
+}

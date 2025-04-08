@@ -1,0 +1,11 @@
+{
+	"name": "IMDBMID",
+	"properties": {
+		"globalConfigurations": {
+			"PipelineBillingEnabled": "false",
+			"factoryStagingLSReferenceName": "AzureDataLakeStorage1",
+			"factoryStagingLSType": "LinkedServiceReference"
+		}
+	},
+	"location": "eastus"
+}

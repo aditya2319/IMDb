@@ -1,0 +1,39 @@
+{
+	"name": "SnowflakeTable12",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "imdb",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "SnowflakeV2Table",
+		"schema": [
+			{
+				"name": "NAMEKEY",
+				"type": "NUMBER",
+				"precision": 10,
+				"scale": 0
+			},
+			{
+				"name": "NCONST",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "PRIMARYNAME",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "BIRTHYEAR",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "DEATHYEAR",
+				"type": "VARCHAR"
+			}
+		],
+		"typeProperties": {
+			"schema": "IMDB_SCHEMA",
+			"table": "DIM_NAME"
+		}
+	}
+}
