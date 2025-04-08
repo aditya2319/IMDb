@@ -11,7 +11,7 @@ Developed a comprehensive data mapping document to track source-to-target transf
 
 # Data Engineering
 
-Profiled 7 IMDb datasets (190+ million rows) using Alteryx to understand data properties and quality
+Profiled 7 IMDb datasets using Alteryx to understand data properties and quality
 Implemented ETL pipelines in Azure Data Factory with proper version control via Git
 Integrated diverse datasets including cast/crew information, movie details, ratings, and multilingual data
 Loaded transformed data into Snowflake with data quality checks ensuring 98% integrity
